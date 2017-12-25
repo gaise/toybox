@@ -31,9 +31,9 @@ int main()
 
     end = std::chrono::system_clock::now();
 
-    time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count() / 1000.0;
+    time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-    array[(i/5)-1] = time;
+    array[i-1] = time;
   }
 
   for (i = 0; i < 20; i++) {
