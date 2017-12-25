@@ -34,6 +34,8 @@ int main()
     time = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
     array[i-1] = time;
+	free(s);
+	checkCudaError(cudaFree(dev_s), __LINE__);
   }
 
   for (i = 0; i < 20; i++) {
