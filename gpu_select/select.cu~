@@ -1,0 +1,44 @@
+#include <iostream>
+#include <cuda.h>
+
+#define N 4096
+#define THREAD 256
+#define BLOCK 18
+
+#define HANDLE_ERROR(x) checkCudaError(x, __LINE__)
+
+void checkCudaError(cudaError_t msg, int x)
+{
+  if (msg != cudaSuccess) {
+    fprintf(stderr, "line: %d %s\n", x, cudaGetErrorString(msg));
+    exit(1);
+  }
+  return;
+}
+
+__global__ void kernel(double *x, double *y, double *z, double *tf, double *ox, double *oy, double *oz)
+{
+	int id = threadIdx.x + blockIdx.x * blockDim.x;
+	int stride = blockDim.x * gridDim.x;
+
+	for (int i = id; i < N; i+=stride)
+		{
+			ox[i] = x[i] * tf[0] + y[i] * tf[1] + z[i] * tf[2] + tf[3];
+			oy[i] = x[i] * tf[4] + y[i] * tf[5] + z[i] * tf[6] + tf[7];
+			oz[i] = x[i] * tf[8] + y[i] * tf[9] + z[i] * tf[10] + tf[11];
+		}
+}
+
+int main()
+{
+	cudaEvent_t start, stop;
+	float time;
+	
+	int count;
+	HANDLE_ERROR(cudaGetDeviceCount(&count));
+	
+
+	for (int i = 0; i < count; i++)
+		{
+			
+	
